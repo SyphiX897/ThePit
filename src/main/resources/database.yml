@@ -1,0 +1,10 @@
+database:
+  type: SQLite # SQLite, MySQL
+  mysql:
+    address: localhost
+    port: 3306
+    database: thepit
+    username: root
+    password: ""
+    ssl: false
+    pooling_size: 5

@@ -1,0 +1,4 @@
+name: ThePit
+version: '1.0.0'
+main: ir.syphix.thepit.ThePit
+api-version: '1.20'
