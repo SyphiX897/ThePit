@@ -1,0 +1,9 @@
+#Formats: legacy, minimessage
+#Note: if you are using 1.16 or higher version, you can use minimessage format.
+text_format: legacy
+
+starting_gold: 150
+
+force_join_arena:
+  enabled: false
+  arena: ThePit

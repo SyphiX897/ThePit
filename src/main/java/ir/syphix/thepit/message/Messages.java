@@ -1,4 +1,6 @@
 package ir.syphix.thepit.message;
 
-public class Messages {
+import ir.syphix.thepit.data.YamlDataManager;
+
+public class Messages extends YamlDataManager {
 }

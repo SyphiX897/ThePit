@@ -1,0 +1,32 @@
+kits:
+  warrior: #Kit id
+    effects:
+      SPEED:
+        duration: 10000000
+        level: 0
+    slots:
+      0:
+        id: pit_sword #In items.yml file
+      1:
+        id: pit_bow
+      9:
+        id: pit_arrow
+      36:
+        id: pit_boots
+      37:
+        id: pit_leggings
+      38:
+        id: pit_chestplate
+      39:
+        id: pit_helmet
+
+
+
+
+
+
+
+
+
+
+

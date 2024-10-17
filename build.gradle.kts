@@ -22,7 +22,8 @@ dependencies {
     paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("me.clip:placeholderapi:2.11.6")
-    implementation("ir.syphix:PalladiumAPI:1.2.9")
+    implementation("ir.syphix:PalladiumAPI:1.3.6")
+    implementation("dev.triumphteam:triumph-gui:3.1.10")
 }
 
 stickynote {
@@ -47,6 +48,7 @@ tasks {
     }
 
     shadowJar {
+        relocate("dev.triumphteam.gui", "ir.syphix.thepit.libs.gui")
         archiveFileName.set("${rootProject.name}-${version}.jar")
         archiveClassifier.set("")
         destinationDirectory.set(file(rootProject.projectDir.path + "/bin"))

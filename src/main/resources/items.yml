@@ -1,0 +1,67 @@
+items:
+  #  example_item: #item id
+  #    itemStack: "COBBLESTONE"
+  #    display_name: "<aqua>Example Cobblestone"
+  #    amount: 12
+  #    lore:
+  #      - "test"
+  #    enchantments:
+  #      - "DURABILITY;1"
+  #    flags:
+  #      - "HIDE_ENCHANTS"
+  #    model_data: 1
+  #    unbreakable: true
+  #    placeable: false
+
+
+  pit_sword:
+    itemStack: "DIAMOND_SWORD"
+    display_name: "<gradient:gold:yellow>Pit Sword</gradient>"
+    enchantments:
+      - "DAMAGE_ALL;1"
+    flags:
+      - "HIDE_ATTRIBUTES"
+
+  pit_bow:
+    itemStack: "BOW"
+    display_name: "<gradient:gold:yellow>Pit Bow</gradient>"
+    flags:
+      - "HIDE_ATTRIBUTES"
+
+  pit_arrow:
+    itemStack: "ARROW"
+    display_name: "<gradient:gold:yellow>Pit Arrow</gradient>"
+    amount: 16
+
+  pit_boots:
+    itemStack: "DIAMOND_BOOTS"
+    display_name: "<gradient:gold:yellow>Pit Boots</gradient>"
+    unbreakable: true
+    flags:
+      - "HIDE_ATTRIBUTES"
+
+  pit_leggings:
+    itemStack: "LEATHER_LEGGINGS"
+    display_name: "<gradient:gold:yellow>Pit Leggings</gradient>"
+    unbreakable: true
+    flags:
+      - "HIDE_ATTRIBUTES"
+
+  pit_chestplate:
+    itemStack: "IRON_CHESTPLATE"
+    display_name: "<gradient:gold:yellow>Pit Chestplate</gradient>"
+    unbreakable: true
+    flags:
+      - "HIDE_ATTRIBUTES"
+
+  pit_helmet:
+    itemStack: "CHAINMAIL_HELMET"
+    display_name: "<gradient:gold:yellow>Pit Helmet</gradient>"
+    unbreakable: true
+    flags:
+      - "HIDE_ATTRIBUTES"
+
+
+
+
+

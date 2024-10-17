@@ -1,30 +1,42 @@
 package ir.syphix.thepit;
 
-import com.mysql.cj.exceptions.WrongArgumentException;
 import ir.syphix.palladiumapi.PalladiumAPI;
+import ir.syphix.palladiumapi.item.CustomItemManager;
+import ir.syphix.thepit.annotation.AutoConstructProcessor;
 import ir.syphix.thepit.command.ThePitCommand;
+import ir.syphix.thepit.core.kit.KitManager;
+import ir.syphix.thepit.data.YamlDataManager;
 import ir.syphix.thepit.database.DatabaseType;
+import ir.syphix.thepit.database.DatabaseUpdateTask;
 import ir.syphix.thepit.database.PitDatabase;
 import ir.syphix.thepit.file.FileManager;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.sayandev.stickynote.bukkit.StickyNote;
 import org.sayandev.stickynote.loader.bukkit.StickyNoteBukkitLoader;
-
-import java.security.InvalidKeyException;
 
 public final class ThePit extends JavaPlugin {
 
     private static PitDatabase database;
+    private static DatabaseUpdateTask updateTask;
+    private static ThePit instance;
+
+    public static ThePit getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
         new StickyNoteBukkitLoader(this);
         PalladiumAPI.registerPlugin(this);
-        PalladiumAPI.registerListeners("ir.syphix.thepit");
+        AutoConstructProcessor.process();
+        instance = this;
+        saveDefaultConfig();
         FileManager.create();
         initializeDatabase();
+        PalladiumAPI.registerListeners("ir.syphix.thepit");
+        PalladiumAPI.setTextFormatType(YamlDataManager.YamlDataConfig.textFormat());
+        loadItems();
+        KitManager.loadKits(FileManager.KitsFile.get().getConfigurationSection("kits"));
 
         new ThePitCommand("thepit");
         // Plugin startup logic
@@ -42,18 +54,26 @@ public final class ThePit extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             throw new NullPointerException("Can't find database section in database.yml!");
         }
+        database = new PitDatabase(YamlDataManager.YamlDataDatabase.databaseType());
 
-        String databaseType = databaseSection.getString("type");
-        if (databaseType.equalsIgnoreCase("sqlite")) {
-            database = new PitDatabase(DatabaseType.SQLITE);
-
-        } else if (databaseType.equalsIgnoreCase("mysql")) {
-            database = new PitDatabase(DatabaseType.MYSQL);
-
-        } else {
-            throw new WrongArgumentException("Invalid database type!");
-        }
+        updateTask = new DatabaseUpdateTask();
+        updateTask.runTaskTimer();
     }
 
+    private void loadItems() {
+        ConfigurationSection itemsSection = FileManager.ItemsFile.get().getConfigurationSection("items");
+        if (itemsSection == null) {
+            throw new NullPointerException("Can't find items section in items.yml!");
+        }
+        CustomItemManager.loadItems(itemsSection);
+    }
+
+    public static PitDatabase database() {
+        return database;
+    }
+
+    public static DatabaseUpdateTask updateTask() {
+        return updateTask;
+    }
 
 }
