@@ -2,23 +2,24 @@ package ir.syphix.thepit;
 
 import ir.syphix.palladiumapi.PalladiumAPI;
 import ir.syphix.palladiumapi.item.CustomItemManager;
-import ir.syphix.thepit.annotation.AutoConstructProcessor;
 import ir.syphix.thepit.command.ThePitCommand;
+import ir.syphix.thepit.core.arena.ArenaManager;
 import ir.syphix.thepit.core.kit.KitManager;
 import ir.syphix.thepit.data.YamlDataManager;
-import ir.syphix.thepit.database.DatabaseType;
-import ir.syphix.thepit.database.DatabaseUpdateTask;
-import ir.syphix.thepit.database.PitDatabase;
+import ir.syphix.thepit.core.database.DatabaseUpdateTask;
+import ir.syphix.thepit.core.database.PitDatabase;
 import ir.syphix.thepit.file.FileManager;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.sayandev.stickynote.loader.bukkit.StickyNoteBukkitLoader;
 
 public final class ThePit extends JavaPlugin {
 
+    private static ThePit instance;
     private static PitDatabase database;
     private static DatabaseUpdateTask updateTask;
-    private static ThePit instance;
+    private static Economy economy = null;
 
     public static ThePit getInstance() {
         return instance;
@@ -28,19 +29,19 @@ public final class ThePit extends JavaPlugin {
     public void onEnable() {
         new StickyNoteBukkitLoader(this);
         PalladiumAPI.registerPlugin(this);
-        AutoConstructProcessor.process();
         instance = this;
         saveDefaultConfig();
+        economy = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
         FileManager.create();
         initializeDatabase();
         PalladiumAPI.registerListeners("ir.syphix.thepit");
-        PalladiumAPI.setTextFormatType(YamlDataManager.YamlDataConfig.textFormat());
+        PalladiumAPI.setTextFormatType("legacy");
         loadItems();
-        KitManager.loadKits(FileManager.KitsFile.get().getConfigurationSection("kits"));
+        KitManager.loadKits();
+        ArenaManager.loadArenas();
+        FileManager.MenusFolder.loadMenusYamlConfig();
 
-        new ThePitCommand("thepit");
-        // Plugin startup logic
-
+        new ThePitCommand();
     }
 
     @Override
@@ -75,5 +76,7 @@ public final class ThePit extends JavaPlugin {
     public static DatabaseUpdateTask updateTask() {
         return updateTask;
     }
+
+    public static Economy economy() { return economy; }
 
 }

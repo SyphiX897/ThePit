@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.sayandev.stickynote.bukkit.StickyNote;
 
 import java.util.UUID;
 
@@ -56,13 +57,13 @@ public class PitPlayer {
     public void setEnderChestItems() {
         for (int i = 0; i <= 26; i++) {
             if (mainStats.enderChestItems().isEmpty()) break;
-            if (mainStats.enderChestItems().get(i) == null) continue;
+            if (mainStats.enderChestItems().get(i) == null) {
+                player.getEnderChest().setItem(i, null);
+                continue;
+            }
             player.getEnderChest().setItem(i, mainStats.enderChestItems().get(i));
         }
     }
-
-
-    //TODO:PERK SYSTEM ALGORITHM
 
 }
 

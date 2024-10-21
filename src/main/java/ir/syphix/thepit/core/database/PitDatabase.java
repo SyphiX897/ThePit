@@ -1,4 +1,4 @@
-package ir.syphix.thepit.database;
+package ir.syphix.thepit.core.database;
 
 import ir.syphix.thepit.core.mission.Mission;
 import ir.syphix.thepit.core.mission.MissionManager;
@@ -8,12 +8,8 @@ import ir.syphix.thepit.core.player.PitPlayer;
 import ir.syphix.thepit.core.player.stats.CombatStats;
 import ir.syphix.thepit.core.player.stats.MainStats;
 import ir.syphix.thepit.data.YamlDataManager;
-import ir.syphix.thepit.file.FileManager;
 import ir.syphix.thepit.utils.ItemStackUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.sayandev.stickynote.bukkit.StickyNote;
 import org.sayandev.stickynote.core.database.Database;
@@ -60,14 +56,14 @@ public class PitDatabase extends YamlDataManager.YamlDataDatabase {
             case MYSQL -> {
                 database = new MySQLDatabase(
                         MySQLCredentials.mySQLCredentials(
-                                MysqlData.address(),
-                                MysqlData.port(),
-                                MysqlData.database(),
-                                MysqlData.ssl(),
-                                MysqlData.username(),
-                                MysqlData.password()
+                                address(),
+                                port(),
+                                database(),
+                                ssl(),
+                                username(),
+                                password()
                         ),
-                        MysqlData.poolingSize(),
+                        poolingSize(),
                         false, driverClass, 0L, 5000L, 10, 1800000L, true
                 );
             }
@@ -257,8 +253,8 @@ public class PitDatabase extends YamlDataManager.YamlDataDatabase {
             int counter = 0;
             for (String item : result.getString("ender_chest_items").split(SPLITTER_REGEX)) {
                 if (counter == 27) break;
-                if (ItemStackUtils.toItemStack(item) == null) {
-                    enderChestItems.add(counter, new ItemStack(Material.AIR));
+                if (item.equalsIgnoreCase("{AIR}")) {
+                    enderChestItems.add(counter, null);
                     continue;
                 }
                 enderChestItems.add(counter, ItemStackUtils.toItemStack(item));

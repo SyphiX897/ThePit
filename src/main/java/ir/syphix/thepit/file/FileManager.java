@@ -1,25 +1,17 @@
 package ir.syphix.thepit.file;
 
 import ir.syphix.palladiumapi.utils.YamlConfig;
-import ir.syphix.thepit.annotation.AutoConstruct;
+import ir.syphix.thepit.core.arena.Arena;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.sayandev.stickynote.bukkit.StickyNote;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
-@AutoConstruct
 public class FileManager {
-
-    private static FileManager instance;
-
-    public static FileManager getInstance() {
-        return instance;
-    }
-
-    public FileManager() {
-        instance = this;
-    }
 
     public static void create() {
         DatabaseFile.add();
@@ -113,7 +105,7 @@ public class FileManager {
         }
     }
 
-    public static class Arena {
+    public static class ArenasFolder {
 
         public static File arenasFolder() {
             File folder = new File(StickyNote.pluginDirectory(), "arenas");
@@ -129,12 +121,52 @@ public class FileManager {
             return folder;
         }
 
-        public static void loadArenas() {
-            if (arenasFolder().listFiles() == null) return;
-            for (String file : Arrays.stream(arenasFolder().listFiles()).map(File::getName).toList()) {
+        public static List<YamlConfig> arenasYamlConfig() {
+            List<YamlConfig> yamlConfigs = new ArrayList<>();
+            for (String arenaFileName : Arrays.stream(arenasFolder().listFiles()).map(File::getName).toList()) {
+                yamlConfigs.add(new YamlConfig(StickyNote.pluginDirectory(), "arenas/" + arenaFileName));
+            }
 
+            return yamlConfigs;
+        }
+
+        public static YamlConfig createArenaFile(Arena arena) {
+            return new YamlConfig(arenasFolder(), arena.id() + ".yml");
+        }
+    }
+
+
+    public static class MenusFolder {
+        public static HashMap<String, YamlConfig> menusYamlConfig = new HashMap<>();
+
+        public static void loadMenusYamlConfig() {
+            for (String fileName : Arrays.stream(menusFolder().listFiles()).map(File::getName).toList()) {
+                menusYamlConfig.put(Arrays.stream(fileName.split("\\.")).toList().get(0), new YamlConfig(StickyNote.pluginDirectory(), "menus/" + fileName));
             }
         }
+
+        public static File menusFolder() {
+            File folder = new File(StickyNote.pluginDirectory(), "menus");
+
+            if (!folder.exists()) {
+                try {
+                    folder.mkdir();
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+
+            return folder;
+        }
+
+        public static YamlConfig yamlConfig(String menuName) {
+            return menusYamlConfig.get(menuName);
+        }
+
+        public static FileConfiguration config(String menuName) {
+            return yamlConfig(menuName).getConfig();
+        }
+
     }
 
 }

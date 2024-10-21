@@ -1,12 +1,15 @@
-package ir.syphix.thepit.database;
+package ir.syphix.thepit.core.database;
 
 import ir.syphix.palladiumapi.annotation.listener.ListenerHandler;
 import ir.syphix.thepit.ThePit;
+import ir.syphix.thepit.core.economy.EconomyType;
+import ir.syphix.thepit.core.economy.ThePitEconomy;
 import ir.syphix.thepit.core.player.PitPlayer;
 import ir.syphix.thepit.core.player.PitPlayerManager;
 import ir.syphix.thepit.core.player.stats.CombatStats;
 import ir.syphix.thepit.core.player.stats.MainStats;
 import ir.syphix.thepit.data.YamlDataManager;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -30,7 +33,10 @@ public class DatabaseListeners implements Listener {
             if (ThePit.database().hasPlayer(uuid)) {
                 pitPlayer = ThePit.database().getPlayer(uuid);
             } else {
-                MainStats mainStats = new MainStats(YamlDataManager.YamlDataConfig.startingGold(), 0, 0, 0,
+                if (ThePitEconomy.economyType == EconomyType.VAULT) {
+                    ThePit.economy().depositPlayer(Bukkit.getPlayer(uuid), YamlDataManager.YamlDataConfig.startingBalance());
+                }
+                MainStats mainStats = new MainStats(YamlDataManager.YamlDataConfig.startingBalance(), 0, 0, 0,
                         new ArrayList<>(), new LinkedList<>(), new ArrayList<>(), new LinkedList<>());
 
                 CombatStats combatStats = new CombatStats(0, 0, 0, 0, 0, 0, 0,
@@ -48,10 +54,8 @@ public class DatabaseListeners implements Listener {
 
     @EventHandler
     public void removePlayerFromCache(PlayerQuitEvent event) {
-        StickyNote.warn("1");
         UUID uuid = event.getPlayer().getUniqueId();
         if (!PitPlayerManager.exist(uuid)) return;
-        StickyNote.warn("2");
         PitPlayer pitPlayer = PitPlayerManager.pitPlayer(uuid);
 
         pitPlayer.updateEnderChest();

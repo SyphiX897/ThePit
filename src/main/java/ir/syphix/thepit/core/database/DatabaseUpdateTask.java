@@ -1,4 +1,4 @@
-package ir.syphix.thepit.database;
+package ir.syphix.thepit.core.database;
 
 import ir.syphix.thepit.ThePit;
 import ir.syphix.thepit.core.player.PitPlayer;

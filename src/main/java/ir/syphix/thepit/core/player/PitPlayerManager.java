@@ -1,23 +1,14 @@
 package ir.syphix.thepit.core.player;
 
-import ir.syphix.thepit.annotation.AutoConstruct;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-@AutoConstruct
 public class PitPlayerManager {
 
     private static final HashMap<UUID, PitPlayer> pitPlayers = new HashMap<>();
-    private static PitPlayerManager instance;
 
-    public static PitPlayerManager getInstance() {
-        return instance;
-    }
-
-    public PitPlayerManager() {
-        instance = this;
+    private PitPlayerManager() {
     }
 
     public static PitPlayer pitPlayer(UUID uniqueId) {

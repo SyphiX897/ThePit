@@ -1,4 +1,4 @@
-package ir.syphix.thepit.database;
+package ir.syphix.thepit.core.database;
 
 public enum DatabaseType {
     MYSQL,

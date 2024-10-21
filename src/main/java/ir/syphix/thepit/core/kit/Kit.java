@@ -2,16 +2,12 @@ package ir.syphix.thepit.core.kit;
 
 import ir.syphix.palladiumapi.item.CustomItem;
 import ir.syphix.palladiumapi.item.CustomItemManager;
-import net.minecraft.util.datafix.fixes.ItemIdFix;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.checkerframework.checker.units.qual.K;
 import org.sayandev.stickynote.bukkit.StickyNote;
-import org.sayandev.stickynote.bukkit.utils.ServerVersion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +46,7 @@ public class Kit {
         this.id = newName;
     }
 
-    public static Kit fromConfig(ConfigurationSection kitSection) {
+    public static Kit fromConfigFile(ConfigurationSection kitSection) {
         Inventory kitInventory = Bukkit.createInventory(null, 45);
 
         ConfigurationSection slotsSection = kitSection.getConfigurationSection("slots");

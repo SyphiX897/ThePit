@@ -1,32 +1,27 @@
 package ir.syphix.thepit.core.kit;
 
-import ir.syphix.thepit.annotation.AutoConstruct;
+import ir.syphix.thepit.file.FileManager;
 import ir.syphix.thepit.utils.TextUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.sayandev.stickynote.bukkit.utils.ServerVersion;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
-@AutoConstruct
 public class KitManager {
 
     private static final HashMap<String, Kit> kits = new HashMap<>();
-    private static KitManager instance;
 
-    public static KitManager getInstance() {
-        return instance;
+    private KitManager() {
     }
 
-    public KitManager() {
-        instance = this;
-    }
-
-    public static void loadKits(ConfigurationSection kitsSection) {
+    public static void loadKits() {
+        ConfigurationSection kitsSection = FileManager.KitsFile.get().getConfigurationSection("kits");
         for (String kit : kitsSection.getKeys(false)) {
             ConfigurationSection kitSection = kitsSection.getConfigurationSection(kit);
-            kits.put(kitSection.getName(), Kit.fromConfig(kitSection));
+            kits.put(kitSection.getName(), Kit.fromConfigFile(kitSection));
         }
     }
 
@@ -44,15 +39,21 @@ public class KitManager {
 
     public static void remove(String id) {
         kits.remove(id);
+        FileManager.KitsFile.get().getConfigurationSection("kits").set(id, null);
+        FileManager.KitsFile.save();
     }
 
     public static boolean exist(String id) {
         return kits.get(id) != null;
     }
 
+    public static List<String> kitsNameList() {
+        return KitManager.kits().stream().map(Kit::id).toList();
+    }
+
     public static void giveKit(Player player, String kitId) {
         if (!KitManager.exist(kitId)) {
-            TextUtils.sendMessage(player, ""); //TODO: kit is not exist message
+            TextUtils.sendMessage(player, ""); //TODO: kit does not exist message
             return;
         }
         Kit kit = kit(kitId);
@@ -65,7 +66,7 @@ public class KitManager {
                 case 38 -> player.getInventory().setChestplate(kit.inventory().getItem(i));
                 case 39 -> player.getInventory().setBoots(kit.inventory().getItem(i));
                 case 40 -> {
-                    if (ServerVersion.supports(9)) break;
+                    if (!ServerVersion.supports(9)) break;
                     player.getInventory().setItemInOffHand(kit.inventory().getItem(i));
                 }
             }

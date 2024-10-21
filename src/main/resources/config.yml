@@ -1,9 +1,14 @@
-#Formats: legacy, minimessage
-#Note: if you are using 1.16 or higher version, you can use minimessage format.
-text_format: legacy
 
-starting_gold: 150
+economy: #types: thepit, vault
+  type: thepit
+  starting_balance: 150
+arena:
+  on_join:
+    clear_effects: true
+    health: 20
+    food_level: 20
+    saturation: 5
 
-force_join_arena:
-  enabled: false
-  arena: ThePit
+  force_join_arena:
+    enabled: false
+    arena: ThePit

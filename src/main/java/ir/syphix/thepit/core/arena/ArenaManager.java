@@ -1,79 +1,177 @@
 package ir.syphix.thepit.core.arena;
 
-import ir.syphix.thepit.annotation.AutoConstruct;
+import ir.syphix.palladiumapi.utils.YamlConfig;
 import ir.syphix.thepit.core.kit.Kit;
 import ir.syphix.thepit.core.kit.KitManager;
+import ir.syphix.thepit.data.YamlDataManager;
+import ir.syphix.thepit.file.FileManager;
 import ir.syphix.thepit.utils.TextUtils;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
-@AutoConstruct
 public class ArenaManager {
 
     private final static HashMap<String, Arena> arenas = new HashMap<>();
-    private static ArenaManager instance;
+    private final static HashMap<String, FileConfiguration> arenasFile = new HashMap<>();
 
-    public static ArenaManager getInstance() {
-        return instance;
+    private ArenaManager() {
     }
 
-    public ArenaManager() {
-        instance = this;
-    }
-
-    public static void create(String name) {
-        Arena arena = new Arena(name);
-        arenas.put(name, arena);
-    }
-
-    public static void create(String name, Location spawnLocation, Kit kit, ArenaStats arenaStats, List<Location> goldSpawnLocations) {
-        Arena arena = new Arena(name, spawnLocation, kit, arenaStats, goldSpawnLocations);
-        arenas.put(name, arena);
-    }
-
-    public static void join(Player player, String arenaName) {
-        if (!arenas.containsKey(arenaName)) {
-            TextUtils.sendMessage(player, ""); //TODO: arena is not exist
+    public static void create(CommandSender sender, String id) {
+        if (arenas.containsKey(id)) {
+            if (sender != null) {
+                TextUtils.sendMessage(sender, ""); //TODO: arena is already exist msg
+            }
             return;
         }
-        Arena arena = arenas.get(arenaName);
+        Arena arena = new Arena(id); //TODO: create arena file and set data in it
+        arena.yamlConfig(createArenaFile(arena));
+        arena.status(ArenaStatus.DISABLE, true);
+        arenas.put(id, arena);
+    }
 
-        switch (arena.arenaStats()) {
+    public static void create(Player player, String id, Location spawnLocation, Kit kit, ArenaStatus arenaStatus, List<Location> goldSpawnLocations, YamlConfig yamlConfig) {
+        if (arenas.containsKey(id)) {
+            if (player != null) {
+                TextUtils.sendMessage(player, ""); //TODO: arena already exist msg
+            }
+            return;
+        }
+        Arena arena = new Arena(id, spawnLocation, kit, arenaStatus, goldSpawnLocations, yamlConfig);
+        arena.yamlConfig(createArenaFile(arena));
+        arena.status(ArenaStatus.ENABLE, true);
+        arenas.put(id, arena);
+        //TODO:
+    }
+
+    public static YamlConfig createArenaFile(Arena arena) {
+        YamlConfig arenaYamlConfig = FileManager.ArenasFolder.createArenaFile(arena);
+        FileConfiguration arenaFile = arenaYamlConfig.getConfig();
+        arenaFile.set("name", arena.id());
+
+        if (arena.spawnLocation() != null) {
+            ConfigurationSection spawnSection = arenaFile.createSection("spawn_location");
+
+            ArenaUtils.setLocationToSection(arena.spawnLocation(), spawnSection);
+        }
+
+        if (arena.kit() != null) {
+            arenaFile.set("kit", arena.kit().id());
+        }
+
+        if (arena.status() != null) {
+            arenaFile.set("arena_status", String.valueOf(arena.status()));
+        }
+
+        if (!arena.goldSpawnLocations().isEmpty()) {
+            ConfigurationSection spawnSection = arenaFile.createSection("random_gold_locations");
+
+            for (Location location : arena.goldSpawnLocations()) {
+                ArenaUtils.setLocationToSection(location, spawnSection.createSection(String.valueOf(UUID.randomUUID())));
+            }
+        }
+
+        arenaYamlConfig.saveConfig();
+        return arenaYamlConfig;
+    }
+
+    public static void join(Player player, String id) {
+        if (!arenas.containsKey(id)) {
+            TextUtils.sendMessage(player, "1"); //TODO: arena does not exist msg
+            return;
+        }
+        Arena arena = arenas.get(id);
+        join(player, arena);
+    }
+
+    public static void join(Player player, Arena arena) {
+        switch (arena.status()) {
             case UPDATING -> {
-                TextUtils.sendMessage(player, ""); //TODO: arena is updating msg
+                TextUtils.sendMessage(player, "2"); //TODO: arena is updating msg
                 return;
             }
             case DISABLE -> {
-                TextUtils.sendMessage(player, ""); //TODO: arena is disable msg
+                TextUtils.sendMessage(player, "3"); //TODO: arena is disable msg
                 return;
             }
         }
 
         if (arena.spawnLocation() == null) {
-            TextUtils.sendMessage(player, ""); //TODO: missing arena spawn location
+            TextUtils.sendMessage(player, "4"); //TODO: missing arena spawn location
             return;
         }
 
         if (arena.kit() == null) { //TODO: missing arena kit
-            TextUtils.sendMessage(player, "");
+            TextUtils.sendMessage(player, "5");
             return;
         }
 
         player.teleport(arena.spawnLocation());
-        player.clearActivePotionEffects();
-        player.setHealth(20);
-        player.setFoodLevel(20);
-        player.setSaturation(4);
+        if (YamlDataManager.YamlDataConfig.arena_clear_effects()) {
+            player.clearActivePotionEffects();
+        }
+        player.setHealth(YamlDataManager.YamlDataConfig.arena_health());
+        player.setFoodLevel(YamlDataManager.YamlDataConfig.arena_food_level());
+        player.setSaturation(YamlDataManager.YamlDataConfig.arena_saturation());
         KitManager.giveKit(player, arena.kit().id());
     }
 
-
-    public static void loadArenas(List<FileConfiguration> arenas) {
-
+    public static Arena arena(String name) {
+        return arenas.get(name);
     }
 
-}
+    public static List<Arena> arenas() {
+        return arenas.values().stream().toList();
+    }
+
+    public static void add(Arena arena) {
+        arenas.put(arena.id(), arena);
+    }
+
+    public static void remove(String id) {
+        arenas.remove(id);
+    } //TODO: remove arena from cache and remove arena file
+
+    public static boolean exist(String id) {
+        return arenas.get(id) != null;
+    }
+
+    public static boolean checkArena(CommandSender sender, String id) {
+        if (exist(id)) {
+            return true;
+        } else {
+            TextUtils.sendMessage(sender, "1"); //TODO: arena does not exist msg
+            return false;
+        }
+    }
+
+    public static List<String> arenasNameList() {
+        return arenas().stream().map(Arena::id).toList();
+    }
+
+    public static void changeStatus(String id, ArenaStatus arenaStatus) {
+        Arena arena = arenas.get(id);
+        changeStatus(arena, arenaStatus);
+    }
+
+    public static void changeStatus(Arena arena, ArenaStatus arenaStatus) {
+        arena.status(arenaStatus, true);
+    }
+
+    public static void loadArenas() {
+        for (YamlConfig arenaYamlConfig : FileManager.ArenasFolder.arenasYamlConfig()) {
+            Arena arena = Arena.fromConfigFile(arenaYamlConfig);
+            if (arena == null) continue;
+            arenas.put(arena.id(), arena);
+        }
+    }
+
+
+} 
