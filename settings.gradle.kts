@@ -6,6 +6,6 @@ pluginManagement {
 }
 
 plugins {
-    id("org.sayandev.stickynote.settings") version "1.7.54"
+    id("org.sayandev.stickynote.settings") version "1.7.64"
 }
 rootProject.name = "ThePit"

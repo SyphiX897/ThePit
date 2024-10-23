@@ -3,6 +3,8 @@ package ir.syphix.thepit.core.arena;
 import ir.syphix.palladiumapi.utils.YamlConfig;
 import ir.syphix.thepit.core.kit.Kit;
 import ir.syphix.thepit.core.kit.KitManager;
+import ir.syphix.thepit.core.player.PitPlayer;
+import ir.syphix.thepit.core.player.PitPlayerManager;
 import ir.syphix.thepit.data.YamlDataManager;
 import ir.syphix.thepit.file.FileManager;
 import ir.syphix.thepit.utils.TextUtils;
@@ -113,14 +115,21 @@ public class ArenaManager {
             return;
         }
 
-        player.teleport(arena.spawnLocation());
-        if (YamlDataManager.YamlDataConfig.arena_clear_effects()) {
+
+        if (YamlDataManager.YamlDataConfig.arenaClearEffects()) {
             player.clearActivePotionEffects();
         }
-        player.setHealth(YamlDataManager.YamlDataConfig.arena_health());
-        player.setFoodLevel(YamlDataManager.YamlDataConfig.arena_food_level());
-        player.setSaturation(YamlDataManager.YamlDataConfig.arena_saturation());
+        if (YamlDataManager.YamlDataConfig.arenaClearInventory()) {
+            player.getInventory().clear();
+        }
+
+        player.setHealth(YamlDataManager.YamlDataConfig.arenaHealth());
+        player.setFoodLevel(YamlDataManager.YamlDataConfig.arenaFoodLevel());
+        player.setSaturation(YamlDataManager.YamlDataConfig.arenaSaturation());
         KitManager.giveKit(player, arena.kit().id());
+        player.teleport(arena.spawnLocation().clone());
+        player.getInventory().setHeldItemSlot(YamlDataManager.YamlDataConfig.heldItemSlot());
+        PitPlayerManager.pitPlayer(player.getUniqueId()).arena(arena);
     }
 
     public static Arena arena(String name) {
@@ -141,15 +150,6 @@ public class ArenaManager {
 
     public static boolean exist(String id) {
         return arenas.get(id) != null;
-    }
-
-    public static boolean checkArena(CommandSender sender, String id) {
-        if (exist(id)) {
-            return true;
-        } else {
-            TextUtils.sendMessage(sender, "1"); //TODO: arena does not exist msg
-            return false;
-        }
     }
 
     public static List<String> arenasNameList() {

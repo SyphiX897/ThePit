@@ -10,8 +10,11 @@ import ir.syphix.thepit.core.database.DatabaseUpdateTask;
 import ir.syphix.thepit.core.database.PitDatabase;
 import ir.syphix.thepit.file.FileManager;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.sayandev.stickynote.bukkit.StickyNote;
 import org.sayandev.stickynote.loader.bukkit.StickyNoteBukkitLoader;
 
 public final class ThePit extends JavaPlugin {
@@ -31,15 +34,17 @@ public final class ThePit extends JavaPlugin {
         PalladiumAPI.registerPlugin(this);
         instance = this;
         saveDefaultConfig();
-        economy = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
+        if (StickyNote.hasPlugin("Vault")) {
+            economy = getServer().getServicesManager().getRegistration(Economy.class).getProvider();
+        }
         FileManager.create();
         initializeDatabase();
         PalladiumAPI.registerListeners("ir.syphix.thepit");
         PalladiumAPI.setTextFormatType("legacy");
         loadItems();
         KitManager.loadKits();
-        ArenaManager.loadArenas();
         FileManager.MenusFolder.loadMenusYamlConfig();
+        ArenaManager.loadArenas();
 
         new ThePitCommand();
     }

@@ -26,19 +26,27 @@ public class YamlDataManager extends FileManager {
             return config.getDouble("economy.starting_balance");
         }
 
-        public static Boolean arena_clear_effects() {
+        public static Integer heldItemSlot() {
+            return arenaSection.getInt("on_join.held_item_slot");
+        }
+
+        public static Boolean arenaClearInventory() {
+            return arenaSection.getBoolean("on_join.clear_inventory");
+        }
+
+        public static Boolean arenaClearEffects() {
             return arenaSection.getBoolean("on_join.clear_effects");
         }
 
-        public static Double arena_health() {
+        public static Double arenaHealth() {
             return arenaSection.getDouble("on_join.health");
         }
 
-        public static Integer arena_food_level() {
+        public static Integer arenaFoodLevel() {
             return arenaSection.getInt("on_join.food_level");
         }
 
-        public static Integer arena_saturation() {
+        public static Integer arenaSaturation() {
             return arenaSection.getInt("on_join.saturation");
         }
     }
@@ -93,7 +101,7 @@ public class YamlDataManager extends FileManager {
 
     public static class YamlDataMenus {
         public static String kitViewTitle(Kit kit) {
-            return TextUtils.colorify(MenusFolder.config("kit_view").getString("title").replace("<kit>", kit.id()));
+            return TextUtils.colorify(MenusFolder.config("kit_view").getString("title").replace("<kit>", TextUtils.capitalize(kit.id())));
         }
 
         public static Material kitViewFillerGlass() {

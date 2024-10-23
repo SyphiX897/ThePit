@@ -140,8 +140,9 @@ public class FileManager {
         public static HashMap<String, YamlConfig> menusYamlConfig = new HashMap<>();
 
         public static void loadMenusYamlConfig() {
-            for (String fileName : Arrays.stream(menusFolder().listFiles()).map(File::getName).toList()) {
-                menusYamlConfig.put(Arrays.stream(fileName.split("\\.")).toList().get(0), new YamlConfig(StickyNote.pluginDirectory(), "menus/" + fileName));
+            List<String> menusNameList = List.of("kit_view");
+            for (String fileName : menusNameList) {
+                menusYamlConfig.put(fileName, new YamlConfig(StickyNote.pluginDirectory(), "menus/" + fileName + ".yml"));
             }
         }
 

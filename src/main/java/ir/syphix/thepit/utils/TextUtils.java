@@ -32,4 +32,8 @@ public class TextUtils {
         return ChatColor.translateAlternateColorCodes('&', content);
     }
 
+    public static String capitalize(String content) {
+        return content.substring(0, 1).toUpperCase() + content.substring(1);
+    }
+
 }

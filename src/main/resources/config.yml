@@ -4,11 +4,12 @@ economy: #types: thepit, vault
   starting_balance: 150
 arena:
   on_join:
+    held_item_slot: 0
+    clear_inventory: true
     clear_effects: true
     health: 20
     food_level: 20
     saturation: 5
-
   force_join_arena:
     enabled: false
     arena: ThePit

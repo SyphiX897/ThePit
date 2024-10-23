@@ -9,10 +9,13 @@ import ir.syphix.thepit.core.kit.KitManager;
 import ir.syphix.thepit.menu.MenuKitView;
 import ir.syphix.thepit.menu.MenuUtils;
 import ir.syphix.thepit.utils.TextUtils;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.bukkit.parser.PlayerParser;
+import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.parser.standard.StringParser;
 import org.incendo.cloud.suggestion.BlockingSuggestionProvider;
 import org.incendo.cloud.suggestion.Suggestion;
@@ -27,12 +30,6 @@ public class ThePitCommand extends BukkitCommand {
         super("thepit", "tpit");
 
 
-        Command.Builder<BukkitSender> debug = builder()
-                .literal("debug")
-                .handler(context -> {
-                    TextUtils.sendMessage(context.sender().platformSender(), String.join("|", ArenaManager.arenasNameList()));
-                });
-        getManager().command(debug);
         //[================================| Kit section |================================]\\
 
         Command.Builder<BukkitSender> kitLiteral = builder() //TODO: give, delete, view
@@ -46,17 +43,11 @@ public class ThePitCommand extends BukkitCommand {
                 .optional("player", PlayerParser.playerParser())
                 .handler(context -> {
                     Player player = context.sender().player();
-                    if (player == null) {
-                        TextUtils.sendMessage(context.sender().platformSender(), ""); //TODO: console not allowed message
-                        return;
-                    }
+                    if (isPlayerNull(player, context.sender().platformSender())) return;
 
                     Player target = context.<Player>optional("player").orElse(player);
                     String kitId = context.get("kit_id");
-                    if (!KitManager.exist(kitId)) {
-                        TextUtils.sendMessage(player, ""); //TODO: Kit does not exist msg
-                        return;
-                    }
+                    if (isKitNull(kitId, player)) return;
 
                     KitManager.giveKit(target, kitId);
                     //TODO: send message to sender
@@ -71,10 +62,7 @@ public class ThePitCommand extends BukkitCommand {
                     CommandSender sender = context.sender().platformSender();
 
                     String kitId = context.get("kit_id");
-                    if (!KitManager.exist(kitId)) {
-                        TextUtils.sendMessage(sender, ""); //TODO: Kit does not exist msg
-                        return;
-                    }
+                    if (isKitNull(kitId, sender)) return;
 
                     KitManager.remove(kitId);
                 });
@@ -86,16 +74,10 @@ public class ThePitCommand extends BukkitCommand {
                 .required("kit_id", StringParser.stringParser(), SuggestionProvider.suggestingStrings(KitManager.kitsNameList()))
                 .handler(context -> {
                     Player player = context.sender().player();
-                    if (player == null) {
-                        TextUtils.sendMessage(context.sender().platformSender(), ""); //TODO: console not allowed message
-                        return;
-                    }
+                    if (isPlayerNull(player, context.sender().platformSender())) return;
 
                     String kitId = context.get("kit_id");
-                    if (!KitManager.exist(kitId)) {
-                        TextUtils.sendMessage(player, ""); //TODO: Kit does not exist msg
-                        return;
-                    }
+                    if (isKitNull(kitId, player)) return;
 
                     new MenuKitView(player, KitManager.kit(kitId));
                 });
@@ -106,18 +88,17 @@ public class ThePitCommand extends BukkitCommand {
 
         Command.Builder<BukkitSender> arenaLiteral = builder()
                 .literal("arena");
-
-        getManager().command(getManager().commandBuilder("arena").proxies(arenaLiteral.build()));
+        getManager().command(arenaLiteral);
 
 
         Command.Builder<BukkitSender> createArena = arenaLiteral
                 .literal("create")
                 .permission("thepit.arena.create")
-                .required("arena_name", StringParser.stringParser(), SuggestionProvider.suggestingStrings("<arena-name>"))
+                .required("arena_id", StringParser.stringParser())
                 .handler(context -> {
                     CommandSender sender = context.sender().platformSender();
 
-                    String arenaId = context.get("arena_name");
+                    String arenaId = context.get("arena_id");
                     if (ArenaManager.exist(arenaId)) {
                         TextUtils.sendMessage(sender, ""); //TODO: arena is already exist msg
                         return;
@@ -128,24 +109,79 @@ public class ThePitCommand extends BukkitCommand {
                 });
         getManager().command(createArena);
 
-        Command.Builder<BukkitSender> joinArena = arenaLiteral
-                .literal("join")
-                .permission("thepit.arena.join")
+
+        Command.Builder<BukkitSender> tpArena = arenaLiteral
+                .literal("tp")
+                .permission("thepit.arena.tp")
                 .required("arena", ArenaParser.arenaParser())
                 .optional("player", PlayerParser.playerParser())
+                .flag(CommandFlag.builder("sendMessage"))
                 .handler(context -> {
                     Player player = context.sender().player();
-                    if (player == null) {
-                        TextUtils.sendMessage(context.sender().platformSender(), ""); //TODO: console not allowed message
-                        return;
-                    }
+                    if (isPlayerNull(player, context.sender().platformSender())) return;
                     Player target = context.<Player>optional("player").orElse(player);
+
                     Arena arena = context.get("arena");
 
-                    ArenaManager.join(target, arena);
+                    if (arena.spawnLocation() == null) {
+                        TextUtils.sendMessage(player, "4"); //TODO: missing arena spawn location
+                        return;
+                    }
+
+                    target.teleport(arena.spawnLocation().clone());
+
+                });
+        getManager().command(tpArena);
+
+
+        Command.Builder<BukkitSender> setLiteral = arenaLiteral //TODO: randomgold, arenaspawn, kit
+                .literal("set");
+
+        Command.Builder<BukkitSender> spawnLocation = setLiteral
+                .literal("spawnLocation")
+                .permission("thepit.arena.setspawn")
+                .required("arena", ArenaParser.arenaParser())
+                .handler(context -> {
+                    Player player = context.sender().player();
+                    if (isPlayerNull(player, context.sender().platformSender())) return;
+
+                    Arena arena = context.get("arena");
+                    arena.spawnLocation(player.getLocation().clone(), true);
                     //TODO: send message to sender
                 });
-        getManager().command(joinArena);
+        getManager().command(spawnLocation);
+
+        Command.Builder<BukkitSender> kit = setLiteral
+                .literal("kit")
+                .permission("thepit.arena.setkit")
+                .required("arena", ArenaParser.arenaParser())
+                .required("kit_id", StringParser.stringParser(), SuggestionProvider.suggestingStrings(KitManager.kitsNameList()))
+                .handler(context -> {
+                    CommandSender sender = context.sender().platformSender();
+                    Arena arena = context.get("arena");
+                    String kitId = context.get("kit_id");
+                    if (isKitNull(kitId, sender)) return;
+
+                    arena.kit(kitId, true);
+                    //TODO: send message to sender
+                });
+        getManager().command(kit);
+
+        Command.Builder<BukkitSender> goldLocation = setLiteral
+                .literal("randomGoldLocation")
+                .permission("thepit.arena.setgoldlocation")
+                .required("arena", ArenaParser.arenaParser())
+                .handler(context -> {
+                    Player player = context.sender().player();
+                    if (isPlayerNull(player, context.sender().platformSender())) return;
+
+                    Arena arena = context.get("arena");
+                    arena.addGoldSpawnLocation(player.getLocation().clone(), true);
+                    //TODO: send message to sender
+                });
+        getManager().command(goldLocation);
+
+
 
         Command.Builder<BukkitSender> statusLiteral = arenaLiteral
                 .literal("status");
@@ -157,9 +193,7 @@ public class ThePitCommand extends BukkitCommand {
                 .required("status", StringParser.stringParser(), SuggestionProvider.suggestingStrings(ArenaStatus.statusList()))
                 .handler(context -> {
                     CommandSender sender = context.sender().platformSender();
-
                     Arena arena = context.get("arena");
-
                     String status = context.get("status");
                     if (status.isBlank() || !ArenaStatus.statusList().contains(status)) {
                         TextUtils.sendMessage(sender, ""); //TODO: arena status is wrong msg
@@ -174,18 +208,49 @@ public class ThePitCommand extends BukkitCommand {
         Command.Builder<BukkitSender> checkStatus = statusLiteral
                 .literal("check")
                 .permission("thepit.arena.status.check")
-                .required("arena_id", StringParser.stringParser(), SuggestionProvider.suggestingStrings(ArenaManager.arenas().stream().map(arenas -> arenas.id()).toList()))
+                .required("arena", ArenaParser.arenaParser())
                 .handler(context -> {
                     CommandSender sender = context.sender().platformSender();
-                    String arenaId = context.get("arena_id");
-                    if (!ArenaManager.checkArena(sender, arenaId)) return;
-
-                    Arena arena = ArenaManager.arena(arenaId);
+                    Arena arena = context.get("arena");
                     String arenaStatus = String.valueOf(arena.status());
 
                     TextUtils.sendMessage(sender, arenaStatus); //TODO: arena status msg
                 });
         getManager().command(checkStatus);
 
+        Command.Builder<BukkitSender> joinArena = arenaLiteral
+                .literal("join")
+                .permission("thepit.arena.join")
+                .required("arena", ArenaParser.arenaParser())
+                .optional("player", PlayerParser.playerParser())
+                .handler(context -> {
+                    Player player = context.sender().player();
+                    if (isPlayerNull(player, context.sender().platformSender())) return;
+
+                    Player target = context.<Player>optional("player").orElse(player);
+                    Arena arena = context.get("arena");
+
+                    ArenaManager.join(target, arena);
+                    //TODO: send message to sender
+                });
+        getManager().command(joinArena);
+
+    }
+
+
+    private boolean isPlayerNull(Player player, CommandSender sender) {
+        if (player == null) {
+            TextUtils.sendMessage(sender, ""); //TODO: console not allowed message
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isKitNull(String kitId, CommandSender sender) {
+        if (!KitManager.exist(kitId)) {
+            TextUtils.sendMessage(sender, ""); //TODO: Kit does not exist msg
+            return true;
+        }
+        return false;
     }
 }

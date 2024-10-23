@@ -1,5 +1,6 @@
 package ir.syphix.thepit.core.player;
 
+import ir.syphix.thepit.core.arena.Arena;
 import ir.syphix.thepit.core.player.stats.CombatStats;
 import ir.syphix.thepit.core.player.stats.MainStats;
 import org.bukkit.Material;
@@ -15,6 +16,7 @@ public class PitPlayer {
     private final Player player;
     private final MainStats mainStats;
     private final CombatStats combatStats;
+    private Arena arena;
 
 
     public PitPlayer(Player player, MainStats mainStats, CombatStats combatStats) {
@@ -38,6 +40,14 @@ public class PitPlayer {
 
     public CombatStats combatStats() {
         return combatStats;
+    }
+
+    public Arena arena() {
+        return arena;
+    }
+
+    public void arena(Arena arena) {
+        this.arena = arena;
     }
 
     public void updateEnderChest() {

@@ -61,10 +61,10 @@ public class KitManager {
         for (int i = 0; i <= 40; i++) {
             if (kit.inventory().getItem(i) == null) continue;
             switch (i) {
-                case 36 -> player.getInventory().setHelmet(kit.inventory().getItem(i));
+                case 36 -> player.getInventory().setBoots(kit.inventory().getItem(i));
                 case 37 -> player.getInventory().setLeggings(kit.inventory().getItem(i));
                 case 38 -> player.getInventory().setChestplate(kit.inventory().getItem(i));
-                case 39 -> player.getInventory().setBoots(kit.inventory().getItem(i));
+                case 39 -> player.getInventory().setHelmet(kit.inventory().getItem(i));
                 case 40 -> {
                     if (!ServerVersion.supports(9)) break;
                     player.getInventory().setItemInOffHand(kit.inventory().getItem(i));

@@ -1,7 +1,7 @@
 items:
   #  example_item: #item id
   #    itemStack: "COBBLESTONE"
-  #    display_name: "<aqua>Example Cobblestone"
+  #    display_name: "&bExample Cobblestone"
   #    amount: 12
   #    lore:
   #      - "test"
@@ -16,50 +16,56 @@ items:
 
   pit_sword:
     itemStack: "DIAMOND_SWORD"
-    display_name: "<gradient:gold:yellow>Pit Sword</gradient>"
+    display_name: "&x&F&B&7&4&0&8P&x&F&B&8&5&0&7i&x&F&B&9&7&0&6t &x&F&C&B&A&0&4S&x&F&C&C&B&0&3w&x&F&C&D&C&0&2o&x&F&C&E&E&0&1r&x&F&C&F&F&0&0d"
     enchantments:
       - "DAMAGE_ALL;1"
     flags:
       - "HIDE_ATTRIBUTES"
+      - "HIDE_UNBREAKABLE"
 
   pit_bow:
     itemStack: "BOW"
-    display_name: "<gradient:gold:yellow>Pit Bow</gradient>"
+    display_name: "&x&F&B&7&4&0&8P&x&F&B&8&B&0&7i&x&F&B&A&2&0&5t &x&F&C&D&1&0&3B&x&F&C&E&8&0&1o&x&F&C&F&F&0&0w"
     flags:
       - "HIDE_ATTRIBUTES"
+      - "HIDE_UNBREAKABLE"
 
   pit_arrow:
     itemStack: "ARROW"
-    display_name: "<gradient:gold:yellow>Pit Arrow</gradient>"
+    display_name: "&x&F&B&7&4&0&8P&x&F&B&8&5&0&7i&x&F&B&9&7&0&6t &x&F&C&B&A&0&4A&x&F&C&C&B&0&3r&x&F&C&D&C&0&2r&x&F&C&E&E&0&1o&x&F&C&F&F&0&0w"
     amount: 16
 
   pit_boots:
     itemStack: "DIAMOND_BOOTS"
-    display_name: "<gradient:gold:yellow>Pit Boots</gradient>"
+    display_name: "&x&F&B&7&4&0&8P&x&F&B&8&5&0&7i&x&F&B&9&7&0&6t &x&F&C&B&A&0&4B&x&F&C&C&B&0&3o&x&F&C&D&C&0&2o&x&F&C&E&E&0&1t&x&F&C&F&F&0&0s"
     unbreakable: true
     flags:
       - "HIDE_ATTRIBUTES"
+      - "HIDE_UNBREAKABLE"
 
   pit_leggings:
     itemStack: "LEATHER_LEGGINGS"
-    display_name: "<gradient:gold:yellow>Pit Leggings</gradient>"
+    display_name: "&x&F&B&7&4&0&8P&x&F&B&8&1&0&7i&x&F&B&8&D&0&7t &x&F&B&A&7&0&5L&x&F&B&B&3&0&4e&x&F&C&C&0&0&4g&x&F&C&C&C&0&3g&x&F&C&D&9&0&2i&x&F&C&E&6&0&1n&x&F&C&F&2&0&1g&x&F&C&F&F&0&0s"
     unbreakable: true
     flags:
       - "HIDE_ATTRIBUTES"
+      - "HIDE_UNBREAKABLE"
 
   pit_chestplate:
     itemStack: "IRON_CHESTPLATE"
-    display_name: "<gradient:gold:yellow>Pit Chestplate</gradient>"
+    display_name: "&x&F&B&7&4&0&8P&x&F&B&7&F&0&7i&x&F&B&8&9&0&7t &x&F&B&9&F&0&6C&x&F&B&A&9&0&5h&x&F&B&B&4&0&4e&x&F&C&B&F&0&4s&x&F&C&C&A&0&3t&x&F&C&D&4&0&2p&x&F&C&D&F&0&2l&x&F&C&E&A&0&1a&x&F&C&F&4&0&1t&x&F&C&F&F&0&0e"
     unbreakable: true
     flags:
       - "HIDE_ATTRIBUTES"
+      - "HIDE_UNBREAKABLE"
 
   pit_helmet:
     itemStack: "CHAINMAIL_HELMET"
-    display_name: "<gradient:gold:yellow>Pit Helmet</gradient>"
+    display_name: "&x&F&B&7&4&0&8P&x&F&B&8&3&0&7i&x&F&B&9&3&0&6t &x&F&B&B&2&0&4H&x&F&C&C&1&0&4e&x&F&C&D&1&0&3l&x&F&C&E&0&0&2m&x&F&C&F&0&0&1e&x&F&C&F&F&0&0t"
     unbreakable: true
     flags:
       - "HIDE_ATTRIBUTES"
+      - "HIDE_UNBREAKABLE"
 
 
 

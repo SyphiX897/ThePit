@@ -59,9 +59,13 @@ public class Arena {
     }
 
     public void kit(String id, boolean updateYamlFile) {
-        kit = KitManager.kit(id);
+        kit(KitManager.kit(id), updateYamlFile);
+    }
+
+    public void kit(Kit kit, boolean updateYamlFile) {
+        this.kit = kit;
         if (updateYamlFile) {
-            config().set("kit", id);
+            config().set("kit", kit.id());
             yamlConfig.saveConfig();
         }
     }
@@ -97,6 +101,9 @@ public class Arena {
     public void addGoldSpawnLocation(Location location, boolean updateYamlFile) {
         goldSpawnLocations.add(location);
         if (updateYamlFile) {
+            if (!config().contains("random_gold_locations")) {
+             config().createSection("random_gold_locations")   ;
+            }
             ArenaUtils.setLocationToSection(location, config().getConfigurationSection("random_gold_locations").createSection(String.valueOf(UUID.randomUUID())));
         }
     }
@@ -132,7 +139,11 @@ public class Arena {
         arena.yamlConfig(arenaYamlConfig);
 
         if (config.contains("spawn_location")) {
-            arena.spawnLocation(ArenaUtils.getLocationFromSection(config.getConfigurationSection("spawn_location")), false);
+            Location spawnLocation = ArenaUtils.getLocationFromSection(config.getConfigurationSection("spawn_location"));
+
+            if (spawnLocation == null) return null;
+
+            arena.spawnLocation(spawnLocation, false);
         }
 
         if (config.contains("kit")) {

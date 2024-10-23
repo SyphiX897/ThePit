@@ -4,9 +4,9 @@ kits:
       SPEED:
         duration: 10000000
         level: 0
-    slots:
+    slots: #In items.yml file
       0:
-        id: pit_sword #In items.yml file
+        id: pit_sword
       1:
         id: pit_bow
       9:
