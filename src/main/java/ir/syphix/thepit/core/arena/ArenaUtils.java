@@ -11,11 +11,12 @@ import java.util.Arrays;
 
 public class ArenaUtils {
 
-    public static void setLocationToSection(Location location, ConfigurationSection section) {
+    public static void setLocationToSection(Location location, ConfigurationSection section, boolean isGoldSpawn) {
         section.set("world", location.getWorld().getName());
-        section.set("x", location.x());
-        section.set("y", location.y());
-        section.set("z", location.z());
+        section.set("x", location.getX());
+        section.set("y", location.getY());
+        section.set("z", location.getZ());
+        if (isGoldSpawn) return;
         section.set("yaw", location.getYaw());
         section.set("pitch", location.getPitch());
     }

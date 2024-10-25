@@ -6,9 +6,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.sayandev.stickynote.bukkit.utils.ServerVersion;
 
+import javax.swing.text.html.Option;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 public class KitManager {
 

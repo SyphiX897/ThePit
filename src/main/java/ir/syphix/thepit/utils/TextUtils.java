@@ -25,7 +25,11 @@ public class TextUtils {
     static BukkitAudiences bukkitAudiences = BukkitAudiences.create(StickyNote.plugin());
 
     public static void sendMessage(CommandSender sender, String content, TagResolver... placeholders) {
-        bukkitAudiences.sender(sender).sendMessage(Component.empty().decoration(TextDecoration.ITALIC, false).append(miniMessage.deserialize(content, placeholders)));
+        bukkitAudiences.sender(sender).sendMessage(toComponent(content, placeholders));
+    }
+
+    public static Component toComponent(String content, TagResolver... placeholders) {
+        return Component.empty().decoration(TextDecoration.ITALIC, false).append(miniMessage.deserialize(content, placeholders));
     }
 
     public static String colorify(String content) {

@@ -50,13 +50,17 @@ public class PitPlayer {
         this.arena = arena;
     }
 
+    public void unsetArena() {
+        arena = null;
+    }
+
     public void updateEnderChest() {
         mainStats.enderChestItems().clear();
         Inventory enderChest = player.getEnderChest();
 
         for (int i = 0; i <= 26; i++) {
-            if (enderChest.getItem(i) == null) {
-                mainStats.enderChestItems().add(i, null);
+            if (enderChest.getItem(i) == null || enderChest.getItem(i).getType() == Material.AIR) {
+                mainStats.enderChestItems().add(i, new ItemStack(Material.AIR));
                 continue;
             }
 
@@ -65,14 +69,16 @@ public class PitPlayer {
     }
 
     public void setEnderChestItems() {
+
         for (int i = 0; i <= 26; i++) {
             if (mainStats.enderChestItems().isEmpty()) break;
-            if (mainStats.enderChestItems().get(i) == null) {
-                player.getEnderChest().setItem(i, null);
+            if (mainStats.enderChestItems().get(i) == null || mainStats.enderChestItems().get(i).getType() == Material.AIR) {
+                player.getEnderChest().setItem(i, new ItemStack(Material.AIR));
                 continue;
             }
             player.getEnderChest().setItem(i, mainStats.enderChestItems().get(i));
         }
+
     }
 
 }

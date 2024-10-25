@@ -5,7 +5,6 @@ import ir.syphix.thepit.core.economy.EconomyType;
 import ir.syphix.thepit.core.kit.Kit;
 import ir.syphix.thepit.file.FileManager;
 import ir.syphix.thepit.utils.TextUtils;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.sayandev.stickynote.bukkit.StickyNote;
@@ -19,11 +18,27 @@ public class YamlDataManager extends FileManager {
         private static final ConfigurationSection arenaSection = config.getConfigurationSection("arena");
 
         public static EconomyType economyType() {
-            return EconomyType.valueOf(config.getString("economy.type"));
+            return EconomyType.valueOf(config.getString("economy.type").toUpperCase());
         }
 
         public static Double startingBalance() {
             return config.getDouble("economy.starting_balance");
+        }
+
+        public static String randomGoldMaterial() {
+            return arenaSection.getString("random_gold_spawn.item");
+        }
+
+        public static Double randomGoldAmount() {
+            return arenaSection.getDouble("random_gold_spawn.amount");
+        }
+
+        public static Integer randomGoldPeriod() {
+            return arenaSection.getInt("random_gold_spawn.period");
+        }
+
+        public static boolean randomGoldAllLocation() {
+            return arenaSection.getBoolean("random_gold_spawn.all_locations");
         }
 
         public static Integer heldItemSlot() {
@@ -104,9 +119,11 @@ public class YamlDataManager extends FileManager {
             return TextUtils.colorify(MenusFolder.config("kit_view").getString("title").replace("<kit>", TextUtils.capitalize(kit.id())));
         }
 
-        public static Material kitViewFillerGlass() {
-            return Material.valueOf(MenusFolder.config("kit_view").getString("filler_glass"));
+        public static String kitViewFillerGlass() {
+
+            return MenusFolder.config("kit_view").getString("filler_glass");
         }
+
     }
 
 

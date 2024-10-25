@@ -1,5 +1,6 @@
 package ir.syphix.thepit;
 
+import de.tr7zw.nbtapi.NBT;
 import ir.syphix.palladiumapi.PalladiumAPI;
 import ir.syphix.palladiumapi.item.CustomItemManager;
 import ir.syphix.thepit.command.ThePitCommand;
@@ -13,6 +14,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.sayandev.stickynote.bukkit.StickyNote;
 import org.sayandev.stickynote.loader.bukkit.StickyNoteBukkitLoader;
@@ -45,6 +47,8 @@ public final class ThePit extends JavaPlugin {
         KitManager.loadKits();
         FileManager.MenusFolder.loadMenusYamlConfig();
         ArenaManager.loadArenas();
+
+
 
         new ThePitCommand();
     }

@@ -59,7 +59,7 @@ public class DatabaseListeners implements Listener {
         PitPlayer pitPlayer = PitPlayerManager.pitPlayer(uuid);
 
         pitPlayer.updateEnderChest();
-        ThePit.database().addPlayerSync(pitPlayer);
+        ThePit.database().addPlayerAsync(pitPlayer);
         PitPlayerManager.remove(uuid);
     }
 }

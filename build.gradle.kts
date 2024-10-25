@@ -11,6 +11,7 @@ version = "1.0.0"
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://repo.sayandev.org/snapshots")
@@ -23,7 +24,7 @@ dependencies {
     paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("me.clip:placeholderapi:2.11.6")
-    implementation("ir.syphix:PalladiumAPI:1.3.6")
+    implementation("ir.syphix:PalladiumAPI:1.3.15")
     implementation("dev.triumphteam:triumph-gui:3.1.10")
 }
 
@@ -50,6 +51,7 @@ tasks {
 
     shadowJar {
         relocate("dev.triumphteam.gui", "ir.syphix.thepit.libs.gui")
+        relocate("ir.syphix.palladiumapi", "ir.syphix.thepit.libs.palladiumapi")
         archiveFileName.set("${rootProject.name}-${version}.jar")
         archiveClassifier.set("")
         destinationDirectory.set(file(rootProject.projectDir.path + "/bin"))

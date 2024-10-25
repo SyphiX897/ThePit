@@ -10,7 +10,9 @@
       </MTProjectMetadataState>
     </option>
     <option name="titleBarState">
-      <MTProjectTitleBarConfigState />
+      <MTProjectTitleBarConfigState>
+        <option name="overrideColor" value="false" />
+      </MTProjectTitleBarConfigState>
     </option>
   </component>
 </project>

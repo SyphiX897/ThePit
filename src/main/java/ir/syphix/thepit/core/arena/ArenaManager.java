@@ -6,16 +6,21 @@ import ir.syphix.thepit.core.kit.KitManager;
 import ir.syphix.thepit.core.player.PitPlayer;
 import ir.syphix.thepit.core.player.PitPlayerManager;
 import ir.syphix.thepit.data.YamlDataManager;
+import ir.syphix.thepit.event.ArenaJoinEvent;
 import ir.syphix.thepit.file.FileManager;
 import ir.syphix.thepit.utils.TextUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ArenaManager {
@@ -61,7 +66,7 @@ public class ArenaManager {
         if (arena.spawnLocation() != null) {
             ConfigurationSection spawnSection = arenaFile.createSection("spawn_location");
 
-            ArenaUtils.setLocationToSection(arena.spawnLocation(), spawnSection);
+            ArenaUtils.setLocationToSection(arena.spawnLocation(), spawnSection, false);
         }
 
         if (arena.kit() != null) {
@@ -76,7 +81,7 @@ public class ArenaManager {
             ConfigurationSection spawnSection = arenaFile.createSection("random_gold_locations");
 
             for (Location location : arena.goldSpawnLocations()) {
-                ArenaUtils.setLocationToSection(location, spawnSection.createSection(String.valueOf(UUID.randomUUID())));
+                ArenaUtils.setLocationToSection(location, spawnSection.createSection(String.valueOf(UUID.randomUUID())), true);
             }
         }
 
@@ -115,9 +120,16 @@ public class ArenaManager {
             return;
         }
 
+        PitPlayer pitPlayer = PitPlayerManager.pitPlayer(player.getUniqueId());
+
+        ArenaJoinEvent arenaJoinEvent = new ArenaJoinEvent(pitPlayer, arena);
+        Bukkit.getServer().getPluginManager().callEvent(arenaJoinEvent);
+        if (arenaJoinEvent.isCancelled()) return;
 
         if (YamlDataManager.YamlDataConfig.arenaClearEffects()) {
-            player.clearActivePotionEffects();
+            for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+                player.removePotionEffect(potionEffect.getType());
+            }
         }
         if (YamlDataManager.YamlDataConfig.arenaClearInventory()) {
             player.getInventory().clear();
@@ -129,7 +141,8 @@ public class ArenaManager {
         KitManager.giveKit(player, arena.kit().id());
         player.teleport(arena.spawnLocation().clone());
         player.getInventory().setHeldItemSlot(YamlDataManager.YamlDataConfig.heldItemSlot());
-        PitPlayerManager.pitPlayer(player.getUniqueId()).arena(arena);
+        arena.addPlayer(pitPlayer);
+        pitPlayer.arena(arena);
     }
 
     public static Arena arena(String name) {

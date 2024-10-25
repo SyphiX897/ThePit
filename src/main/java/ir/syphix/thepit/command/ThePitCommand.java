@@ -4,15 +4,19 @@ import ir.syphix.thepit.command.parser.ArenaParser;
 import ir.syphix.thepit.core.arena.Arena;
 import ir.syphix.thepit.core.arena.ArenaManager;
 import ir.syphix.thepit.core.arena.ArenaStatus;
+import ir.syphix.thepit.core.economy.ThePitEconomy;
 import ir.syphix.thepit.core.kit.Kit;
 import ir.syphix.thepit.core.kit.KitManager;
+import ir.syphix.thepit.core.player.PitPlayerManager;
 import ir.syphix.thepit.menu.MenuKitView;
 import ir.syphix.thepit.menu.MenuUtils;
 import ir.syphix.thepit.utils.TextUtils;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.bukkit.parser.PlayerParser;
 import org.incendo.cloud.parser.flag.CommandFlag;
@@ -20,6 +24,7 @@ import org.incendo.cloud.parser.standard.StringParser;
 import org.incendo.cloud.suggestion.BlockingSuggestionProvider;
 import org.incendo.cloud.suggestion.Suggestion;
 import org.incendo.cloud.suggestion.SuggestionProvider;
+import org.jetbrains.annotations.NotNull;
 import org.sayandev.stickynote.bukkit.command.BukkitCommand;
 import org.sayandev.stickynote.bukkit.command.BukkitSender;
 
@@ -235,8 +240,38 @@ public class ThePitCommand extends BukkitCommand {
                 });
         getManager().command(joinArena);
 
+
+
+        //[================================| Miscellaneous section |================================]\\
+
+        Command.Builder<BukkitSender> balance = builder()
+                .literal("balance")
+                .permission("thepit.balance")
+                .optional("player", PlayerParser.playerParser())
+                .handler(context -> {
+                    Player player = context.sender().player();
+                    if (isPlayerNull(player, context.sender().platformSender())) return;
+
+                    if (!player.hasPermission("thepit.balance.other")) {
+                        double playerBalance = ThePitEconomy.balance(player.getUniqueId());
+
+                        TextUtils.sendMessage(player, playerBalance + "", Placeholder.component("balance", TextUtils.toComponent(String.valueOf(playerBalance))));
+                        return;
+                    }
+                    Player target = context.<Player>optional("player").orElse(player);
+                    double targetBalance = ThePitEconomy.balance(target.getUniqueId());
+
+                    TextUtils.sendMessage(player, targetBalance + "", Placeholder.component("balance", TextUtils.toComponent(String.valueOf(targetBalance))));
+                });
+        getManager().command(balance);
+        getManager().command(getManager().commandBuilder("balance").proxies(balance.build()));
+        getManager().command(getManager().commandBuilder("gold").proxies(balance.build()));
+
     }
 
+
+
+    //[================================| ================== |================================]\\
 
     private boolean isPlayerNull(Player player, CommandSender sender) {
         if (player == null) {

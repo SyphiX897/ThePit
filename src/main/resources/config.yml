@@ -1,8 +1,13 @@
 
-economy: #types: thepit, vault
+economy: #Types: thepit, vault
   type: thepit
   starting_balance: 150
 arena:
+  random_gold_spawn:
+    item: random_gold #In items.yml
+    amount: 5 # The amount of money players receive
+    period: 800 # The time between each gold spawn
+    all_locations: false # Should spawn gold in all arenas gold spawn locations?
   on_join:
     held_item_slot: 0
     clear_inventory: true

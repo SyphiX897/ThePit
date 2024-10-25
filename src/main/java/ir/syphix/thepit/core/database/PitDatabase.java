@@ -10,6 +10,7 @@ import ir.syphix.thepit.core.player.stats.MainStats;
 import ir.syphix.thepit.data.YamlDataManager;
 import ir.syphix.thepit.utils.ItemStackUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.sayandev.stickynote.bukkit.StickyNote;
 import org.sayandev.stickynote.core.database.Database;
@@ -254,12 +255,14 @@ public class PitDatabase extends YamlDataManager.YamlDataDatabase {
             for (String item : result.getString("ender_chest_items").split(SPLITTER_REGEX)) {
                 if (counter == 27) break;
                 if (item.equalsIgnoreCase("{AIR}")) {
-                    enderChestItems.add(counter, null);
+                    enderChestItems.add(counter, new ItemStack(Material.AIR));
+                    counter++;
                     continue;
                 }
                 enderChestItems.add(counter, ItemStackUtils.toItemStack(item));
                 counter++;
             }
+
 
             MainStats mainStats = new MainStats(result.getDouble("gold"),
                     result.getLong("level"),
