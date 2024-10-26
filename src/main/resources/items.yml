@@ -12,11 +12,16 @@ items:
   #    model_data: 1
   #    unbreakable: true
   #    placeable: false
+  #    tags:
+  #      1:
+  #        type: string
+  #        tag: "thepit:test;test"
 
 
   pit_sword:
     itemStack: "DIAMOND_SWORD"
     display_name: "&ePit Sword"
+    unbreakable: true
     enchantments:
       - "DAMAGE_ALL;1"
     flags:
@@ -26,6 +31,7 @@ items:
   pit_bow:
     itemStack: "BOW"
     display_name: "&ePit Bow"
+    unbreakable: true
     flags:
       - "HIDE_ATTRIBUTES"
       - "HIDE_UNBREAKABLE"
@@ -69,9 +75,5 @@ items:
 
   random_gold:
     itemStack: GOLD_INGOT
-    display_name: "&e&lGOLD"
+    display_name: "&6&lGOLD"
     model_data: 897
-    tags:
-      1:
-        type: string
-        tag: "thepit:random_gold;random_gold"

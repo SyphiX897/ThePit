@@ -6,6 +6,7 @@ import ir.syphix.thepit.core.kit.KitManager;
 import ir.syphix.thepit.core.player.PitPlayer;
 import ir.syphix.thepit.core.player.PitPlayerManager;
 import ir.syphix.thepit.utils.TextUtils;
+import ir.syphix.thepit.utils.Utils;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -54,7 +55,7 @@ public class Arena {
             if (!config().contains("spawn_location")) {
                 config().createSection("spawn_location");
             }
-            ArenaUtils.setLocationToSection(location, config().getConfigurationSection("spawn_location"), false);
+            Utils.setLocationToSection(location, config().getConfigurationSection("spawn_location"), false);
             yamlConfig.saveConfig();
         }
     }
@@ -98,7 +99,7 @@ public class Arena {
             config().createSection("random_gold_locations");
 
             for (Location location : locations) {
-                ArenaUtils.setLocationToSection(location, config().getConfigurationSection("random_gold_locations").createSection(String.valueOf(UUID.randomUUID())), true);
+                Utils.setLocationToSection(location, config().getConfigurationSection("random_gold_locations").createSection(String.valueOf(UUID.randomUUID())), true);
             }
         }
         yamlConfig.saveConfig();
@@ -110,7 +111,7 @@ public class Arena {
             if (!config().contains("random_gold_locations")) {
              config().createSection("random_gold_locations")   ;
             }
-            ArenaUtils.setLocationToSection(location, config().getConfigurationSection("random_gold_locations").createSection(String.valueOf(UUID.randomUUID())), true);
+            Utils.setLocationToSection(location, config().getConfigurationSection("random_gold_locations").createSection(String.valueOf(UUID.randomUUID())), true);
         }
         yamlConfig.saveConfig();
     }
@@ -139,6 +140,14 @@ public class Arena {
         players.add(pitPlayer);
     }
 
+    public void removePlayer(Player player) {
+        removePlayer(PitPlayerManager.pitPlayer(player.getUniqueId()));
+    }
+
+    public void removePlayer(PitPlayer pitPlayer) {
+        players.remove(pitPlayer);
+    }
+
     public static Arena fromConfigFile(YamlConfig arenaYamlConfig) {
         FileConfiguration config = arenaYamlConfig.getConfig();
         String arenaId = config.getString("name");
@@ -156,7 +165,7 @@ public class Arena {
         arena.yamlConfig(arenaYamlConfig);
 
         if (config.contains("spawn_location")) {
-            Location spawnLocation = ArenaUtils.getLocationFromSection(config.getConfigurationSection("spawn_location"));
+            Location spawnLocation = Utils.getLocationFromSection(config.getConfigurationSection("spawn_location"));
 
             if (spawnLocation == null) return null;
 
@@ -176,7 +185,7 @@ public class Arena {
             ConfigurationSection randomGoldLocationsSection = config.getConfigurationSection("random_gold_locations");
             if (!randomGoldLocationsSection.getKeys(false).isEmpty()) {
                 for (String locationUUID : randomGoldLocationsSection.getKeys(false)) {
-                    randomGoldLocations.add(ArenaUtils.getLocationFromSection(randomGoldLocationsSection.getConfigurationSection(locationUUID)));
+                    randomGoldLocations.add(Utils.getLocationFromSection(randomGoldLocationsSection.getConfigurationSection(locationUUID)));
                 }
             }
             arena.goldSpawnLocations(randomGoldLocations, false);

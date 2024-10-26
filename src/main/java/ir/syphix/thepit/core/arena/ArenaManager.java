@@ -9,6 +9,7 @@ import ir.syphix.thepit.data.YamlDataManager;
 import ir.syphix.thepit.event.ArenaJoinEvent;
 import ir.syphix.thepit.file.FileManager;
 import ir.syphix.thepit.utils.TextUtils;
+import ir.syphix.thepit.utils.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
@@ -18,10 +19,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.checkerframework.checker.units.qual.A;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class ArenaManager {
 
@@ -66,7 +64,7 @@ public class ArenaManager {
         if (arena.spawnLocation() != null) {
             ConfigurationSection spawnSection = arenaFile.createSection("spawn_location");
 
-            ArenaUtils.setLocationToSection(arena.spawnLocation(), spawnSection, false);
+            Utils.setLocationToSection(arena.spawnLocation(), spawnSection, false);
         }
 
         if (arena.kit() != null) {
@@ -81,7 +79,7 @@ public class ArenaManager {
             ConfigurationSection spawnSection = arenaFile.createSection("random_gold_locations");
 
             for (Location location : arena.goldSpawnLocations()) {
-                ArenaUtils.setLocationToSection(location, spawnSection.createSection(String.valueOf(UUID.randomUUID())), true);
+                Utils.setLocationToSection(location, spawnSection.createSection(String.valueOf(UUID.randomUUID())), true);
             }
         }
 
@@ -149,8 +147,8 @@ public class ArenaManager {
         return arenas.get(name);
     }
 
-    public static List<Arena> arenas() {
-        return arenas.values().stream().toList();
+    public static Collection<Arena> arenas() {
+        return arenas.values();
     }
 
     public static void add(Arena arena) {

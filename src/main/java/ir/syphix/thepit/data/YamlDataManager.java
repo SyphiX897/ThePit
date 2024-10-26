@@ -25,7 +25,7 @@ public class YamlDataManager extends FileManager {
             return config.getDouble("economy.starting_balance");
         }
 
-        public static String randomGoldMaterial() {
+        public static String randomGoldCustomItemId() {
             return arenaSection.getString("random_gold_spawn.item");
         }
 
@@ -39,6 +39,18 @@ public class YamlDataManager extends FileManager {
 
         public static boolean randomGoldAllLocation() {
             return arenaSection.getBoolean("random_gold_spawn.all_locations");
+        }
+
+        public static boolean randomGoldAllowStack() {
+            return arenaSection.getBoolean("random_gold_spawn.allow_stack");
+        }
+
+        public static boolean isRandomGoldHologramEnable() {
+            return arenaSection.getBoolean("random_gold_spawn.hologram.enabled");
+        }
+
+        public static String randomGoldCustomName() {
+            return arenaSection.getString("random_gold_spawn.hologram.text");
         }
 
         public static Integer heldItemSlot() {

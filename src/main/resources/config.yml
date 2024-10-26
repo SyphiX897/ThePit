@@ -4,10 +4,14 @@ economy: #Types: thepit, vault
   starting_balance: 150
 arena:
   random_gold_spawn:
-    item: random_gold #In items.yml
+    item: random_gold #Item id, in items.yml file
     amount: 5 # The amount of money players receive
-    period: 800 # The time between each gold spawn
-    all_locations: false # Should spawn gold in all arenas gold spawn locations?
+    period: 100 # The time between each gold spawn
+    all_locations: false # Spawning gold in all arenas gold_spawn locations
+    allow_stack: false # Allows gold to be spawned multiple times in a specific location
+    hologram:
+      enabled: true
+      text: "&6&lGOLD"
   on_join:
     held_item_slot: 0
     clear_inventory: true
@@ -18,3 +22,5 @@ arena:
   force_join_arena:
     enabled: false
     arena: ThePit
+
+lobby_location: {}

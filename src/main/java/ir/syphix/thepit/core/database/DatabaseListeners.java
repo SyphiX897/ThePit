@@ -2,6 +2,8 @@ package ir.syphix.thepit.core.database;
 
 import ir.syphix.palladiumapi.annotation.listener.ListenerHandler;
 import ir.syphix.thepit.ThePit;
+import ir.syphix.thepit.core.arena.Arena;
+import ir.syphix.thepit.core.arena.ArenaManager;
 import ir.syphix.thepit.core.economy.EconomyType;
 import ir.syphix.thepit.core.economy.ThePitEconomy;
 import ir.syphix.thepit.core.player.PitPlayer;
@@ -60,6 +62,10 @@ public class DatabaseListeners implements Listener {
 
         pitPlayer.updateEnderChest();
         ThePit.database().addPlayerAsync(pitPlayer);
+        for (Arena arena : ArenaManager.arenas()) {
+            if (!arena.players().contains(pitPlayer)) continue;
+            arena.removePlayer(pitPlayer);
+        }
         PitPlayerManager.remove(uuid);
     }
 }

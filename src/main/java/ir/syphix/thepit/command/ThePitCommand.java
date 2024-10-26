@@ -1,30 +1,24 @@
 package ir.syphix.thepit.command;
 
+import ir.syphix.palladiumapi.core.item.CustomItem;
+import ir.syphix.palladiumapi.core.item.CustomItemManager;
 import ir.syphix.thepit.command.parser.ArenaParser;
 import ir.syphix.thepit.core.arena.Arena;
 import ir.syphix.thepit.core.arena.ArenaManager;
 import ir.syphix.thepit.core.arena.ArenaStatus;
 import ir.syphix.thepit.core.economy.ThePitEconomy;
-import ir.syphix.thepit.core.kit.Kit;
 import ir.syphix.thepit.core.kit.KitManager;
-import ir.syphix.thepit.core.player.PitPlayerManager;
+import ir.syphix.thepit.core.lobby.LobbyManager;
 import ir.syphix.thepit.menu.MenuKitView;
-import ir.syphix.thepit.menu.MenuUtils;
 import ir.syphix.thepit.utils.TextUtils;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.Command;
 import org.incendo.cloud.bukkit.parser.PlayerParser;
 import org.incendo.cloud.parser.flag.CommandFlag;
 import org.incendo.cloud.parser.standard.StringParser;
-import org.incendo.cloud.suggestion.BlockingSuggestionProvider;
-import org.incendo.cloud.suggestion.Suggestion;
 import org.incendo.cloud.suggestion.SuggestionProvider;
-import org.jetbrains.annotations.NotNull;
 import org.sayandev.stickynote.bukkit.command.BukkitCommand;
 import org.sayandev.stickynote.bukkit.command.BukkitSender;
 
@@ -34,12 +28,64 @@ public class ThePitCommand extends BukkitCommand {
     public ThePitCommand() {
         super("thepit", "tpit");
 
+        //[================================| Give section |================================]\\
+
+        Command.Builder<BukkitSender> giveLiteral = builder()
+                .literal("give");
+
+        Command.Builder<BukkitSender> giveItem = giveLiteral
+                .literal("item")
+                .permission("thepit.give.items")
+                .required("item_id", StringParser.stringParser(), SuggestionProvider.suggestingStrings(CustomItemManager.items().stream().map(CustomItem::getId).toList()))
+                .optional("player", PlayerParser.playerParser())
+                .handler(context -> {
+                    Player player = context.sender().player();
+                    if (isPlayerNull(player, context.sender().platformSender())) return;
+
+                    Player target = context.<Player>optional("player").orElse(player);
+                    String itemId = context.get("item_id");
+                    if (CustomItemManager.getItemById(itemId) == null) {
+                        TextUtils.sendMessage(player, ""); //TODO: item does not exist msg
+                        return;
+                    }
+
+                    if (target.getInventory().firstEmpty() == -1) {
+                        TextUtils.sendMessage(player, ""); //TODO: inventory is full msg
+                        return;
+                    }
+
+                    target.getInventory().addItem(CustomItemManager.getItemById(itemId).getItemStack());
+                    //TODO: send message to sender
+
+                });
+        getManager().command(giveItem);
+
+
+
+        //[================================| Lobby section |================================]\\
+
+        Command.Builder<BukkitSender> lobbyLiteral = builder()
+                .literal("lobby");
+
+        Command.Builder<BukkitSender> setLobbyLocation = lobbyLiteral
+                .literal("set")
+                .permission("thepit.lobby.set")
+                .handler(context -> {
+
+                    Player player = context.sender().player();
+                    if (isPlayerNull(player, context.sender().platformSender())) return;
+
+                    LobbyManager.location(player.getLocation());
+                    //TODO: send message to sender
+                });
+        getManager().command(setLobbyLocation);
+
+
 
         //[================================| Kit section |================================]\\
 
         Command.Builder<BukkitSender> kitLiteral = builder() //TODO: give, delete, view
-                .literal("kit")
-                .permission("thepit.kit");
+                .literal("kit");
 
         Command.Builder<BukkitSender> giveKit = kitLiteral
                 .literal("give")

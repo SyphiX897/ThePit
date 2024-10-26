@@ -24,7 +24,7 @@ dependencies {
     paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("me.clip:placeholderapi:2.11.6")
-    implementation("ir.syphix:PalladiumAPI:1.3.15")
+    implementation("ir.syphix:PalladiumAPI:1.3.19")
     implementation("dev.triumphteam:triumph-gui:3.1.10")
 }
 

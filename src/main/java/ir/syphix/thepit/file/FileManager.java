@@ -146,20 +146,6 @@ public class FileManager {
             }
         }
 
-        public static File menusFolder() {
-            File folder = new File(StickyNote.pluginDirectory(), "menus");
-
-            if (!folder.exists()) {
-                try {
-                    folder.mkdir();
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            }
-
-            return folder;
-        }
-
         public static YamlConfig yamlConfig(String menuName) {
             return menusYamlConfig.get(menuName);
         }

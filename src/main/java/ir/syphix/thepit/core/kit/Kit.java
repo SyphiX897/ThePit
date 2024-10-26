@@ -1,7 +1,7 @@
 package ir.syphix.thepit.core.kit;
 
-import ir.syphix.palladiumapi.item.CustomItem;
-import ir.syphix.palladiumapi.item.CustomItemManager;
+import ir.syphix.palladiumapi.core.item.CustomItem;
+import ir.syphix.palladiumapi.core.item.CustomItemManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
