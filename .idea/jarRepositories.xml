@@ -81,5 +81,10 @@
       <option name="name" value="maven5" />
       <option name="url" value="https://jitpack.io/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven6" />
+      <option name="name" value="maven6" />
+      <option name="url" value="https://maven.citizensnpcs.co/repo" />
+    </remote-repository>
   </component>
 </project>

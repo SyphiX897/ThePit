@@ -2,25 +2,35 @@
 economy: #Types: thepit, vault
   type: thepit
   starting_balance: 150
+
 arena:
   random_gold_spawn:
     item: random_gold #Item id, in items.yml file
     amount: 5 # The amount of money players receive
-    period: 100 # The time between each gold spawn
+    period: 1200 # The time between each gold spawn
     all_locations: false # Spawning gold in all arenas gold_spawn locations
     allow_stack: false # Allows gold to be spawned multiple times in a specific location
     hologram:
       enabled: true
       text: "&6&lGOLD"
   on_join:
-    held_item_slot: 0
-    clear_inventory: true
-    clear_effects: true
-    health: 20
-    food_level: 20
-    saturation: 5
-  force_join_arena:
-    enabled: false
-    arena: ThePit
+    actions: # Full action list in: wiki
+      - id: "clear_inventory"
+      - id: "clear_effects"
+      - id: "held_item_slot"
+        number: 0
+      - id: "health"
+        number: 20
+      - id: "food_level"
+        number: 20
+      - id: "saturation"
+        number: 6
 
-lobby_location: {}
+force_arena_join:
+  enabled: true
+  arena: ThePit
+
+lobby:
+  on_join:
+    actions: {}
+  location: {}

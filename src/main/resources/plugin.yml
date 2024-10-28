@@ -1,6 +1,6 @@
 name: ThePit
 version: '1.0.0'
-main: ir.syphix.thepit.ThePit
+main: me.syphix.thepit.ThePit
 api-version: '1.13'
 softdepend:
   - Vault
