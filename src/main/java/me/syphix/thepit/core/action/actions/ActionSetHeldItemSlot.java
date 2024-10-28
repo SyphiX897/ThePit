@@ -11,10 +11,6 @@ public class ActionSetHeldItemSlot extends Action {
     public void apply(TriggerData triggerData) {
         if (triggerData.player().isEmpty()) return;
         if (triggerData.number().isEmpty()) return;
-
-        StickyNote.warn("test");
-        int x = (int) ((double) triggerData.number().get());
-        StickyNote.warn(String.valueOf(x));
-        triggerData.player().get().getInventory().setHeldItemSlot(x);
+        StickyNote.runSync(() -> triggerData.player().get().getInventory().setHeldItemSlot((int) ((double) triggerData.number().get())), 1);
     }
 }

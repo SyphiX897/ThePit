@@ -26,14 +26,12 @@ public class ActionManager {
         for (Object object : actionsList) {
             LinkedHashMap<String, ?> dataMap = (LinkedHashMap<String, ?>) object;
             String actionId = dataMap.get("id").toString();
-            StickyNote.warn(actionId);
             TriggerData triggerData;
 
             if (dataMap.get("number") == null) {
                 triggerData = new TriggerData(Optional.ofNullable(player), null);
             } else {
                 int number = (int) dataMap.get("number");
-                StickyNote.warn(String.valueOf(number));
                 triggerData = new TriggerData(Optional.of(player), Optional.of((double) number));
             }
 
