@@ -1,5 +1,6 @@
 package me.syphix.thepit;
 
+import io.papermc.paper.event.player.PlayerPickItemEvent;
 import ir.syphix.palladiumapi.PalladiumAPI;
 import ir.syphix.palladiumapi.core.item.CustomItemManager;
 import ir.syphix.palladiumapi.utils.Utils;
@@ -15,13 +16,25 @@ import me.syphix.thepit.core.task.GoldSpawnTask;
 import me.syphix.thepit.data.YamlDataManager;
 import me.syphix.thepit.file.FileManager;
 import me.syphix.thepit.hook.PlaceHolderAPIHook;
+import me.syphix.thepit.nms.ClientboundAddEntityPacketAccessor;
+import me.syphix.thepit.utils.TextUtils;
+import net.kyori.adventure.bossbar.BossBar;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Boss;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.exposed.sql.Except;
 import org.sayandev.stickynote.bukkit.StickyNote;
+import org.sayandev.stickynote.bukkit.nms.NMSUtils;
+import org.sayandev.stickynote.bukkit.nms.accessors.EntityAccessor;
+import org.sayandev.stickynote.bukkit.nms.accessors.EntityTypeAccessor;
+import org.sayandev.stickynote.bukkit.nms.accessors.Vec3Accessor;
 import org.sayandev.stickynote.loader.bukkit.StickyNoteBukkitLoader;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 public final class ThePit extends JavaPlugin {
 

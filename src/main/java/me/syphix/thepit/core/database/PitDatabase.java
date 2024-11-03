@@ -5,6 +5,7 @@ import me.syphix.thepit.core.mission.MissionManager;
 import me.syphix.thepit.core.perk.Perk;
 import me.syphix.thepit.core.perk.PerkManager;
 import me.syphix.thepit.core.player.PitPlayer;
+import me.syphix.thepit.core.player.combat.Combat;
 import me.syphix.thepit.core.player.stats.CombatStats;
 import me.syphix.thepit.core.player.stats.MainStats;
 import me.syphix.thepit.data.YamlDataManager;
@@ -281,7 +282,7 @@ public class PitDatabase extends YamlDataManager.YamlDataDatabase {
                     result.getDouble("melee_damage_taken"), result.getDouble("arrow_damage_taken"), result.getLong("block_placed"),
                     result.getLong("lava_bucket_placed"));
 
-            PitPlayer pitPlayer = new PitPlayer(Bukkit.getPlayer(uniqueId), mainStats, combatStats);
+            PitPlayer pitPlayer = new PitPlayer(Bukkit.getPlayer(uniqueId), mainStats, combatStats, new Combat(null, null));
             result.close();
             return pitPlayer;
         } catch (SQLException e) {

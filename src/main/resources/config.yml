@@ -25,10 +25,16 @@ arena:
         number: 20
       - id: "saturation"
         number: 6
-
 force_arena_join:
   enabled: true
   arena: ThePit
+
+combat:
+  time: 30 #seconds
+  boss_bar:
+    enabled: true
+    text: "Combat remaining time: <time>"
+    color: RED
 
 lobby:
   on_join:

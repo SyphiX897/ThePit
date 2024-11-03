@@ -15,6 +15,8 @@ public class LobbyManager {
     private static Location lobbyLocation;
 
     public static Location location() {
+        loadLocation();
+
         return lobbyLocation;
     }
 
@@ -25,6 +27,8 @@ public class LobbyManager {
     }
 
     public static void teleport(Player player) {
+        loadLocation();
+
         if (location() == null) {
             TextUtils.sendMessage(player, ""); //TODO: lobby location does not exist msg
             return;
@@ -34,6 +38,12 @@ public class LobbyManager {
         PitPlayerManager.pitPlayer(player.getUniqueId()).combatStats().killStreak(0);
         if (YamlDataManager.YamlDataConfig.lobbyJoinActions() == null) return;
         ActionManager.handle(player, YamlDataManager.YamlDataConfig.lobbyJoinActions());
+    }
+
+    private static void loadLocation() {
+        if (!StickyNote.plugin().getConfig().getConfigurationSection("lobby.location").getKeys(false).isEmpty()) {
+            LobbyManager.location(Utils.getLocationFromSection(StickyNote.plugin().getConfig().getConfigurationSection("lobby.location")));
+        }
     }
 
 }

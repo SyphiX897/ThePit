@@ -2,6 +2,7 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         maven("https://repo.sayandev.org/snapshots")
+        maven("https://repo.screamingsandals.org/public")
     }
 }
 

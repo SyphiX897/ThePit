@@ -1,5 +1,6 @@
 package me.syphix.thepit.core.player;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -15,7 +16,7 @@ public class PitPlayerManager {
         return pitPlayers.get(uniqueId);
     }
 
-    public static List<PitPlayer> pitPlayers() {
+    public static Collection<PitPlayer> pitPlayers() {
         return pitPlayers.values().stream().toList();
     }
 

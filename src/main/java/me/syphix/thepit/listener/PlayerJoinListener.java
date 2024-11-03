@@ -4,6 +4,9 @@ import ir.syphix.palladiumapi.annotation.listener.ListenerHandler;
 import me.syphix.thepit.core.arena.ArenaManager;
 import me.syphix.thepit.core.lobby.LobbyManager;
 import me.syphix.thepit.data.YamlDataManager;
+import me.syphix.thepit.utils.TextUtils;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -29,5 +32,6 @@ public class PlayerJoinListener implements Listener {
             }
             LobbyManager.teleport(event.getPlayer());
         }
+
     }
 }

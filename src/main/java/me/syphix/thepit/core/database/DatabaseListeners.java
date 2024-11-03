@@ -8,6 +8,7 @@ import me.syphix.thepit.core.economy.EconomyType;
 import me.syphix.thepit.core.economy.ThePitEconomy;
 import me.syphix.thepit.core.player.PitPlayer;
 import me.syphix.thepit.core.player.PitPlayerManager;
+import me.syphix.thepit.core.player.combat.Combat;
 import me.syphix.thepit.core.player.stats.CombatStats;
 import me.syphix.thepit.core.player.stats.MainStats;
 import me.syphix.thepit.data.YamlDataManager;
@@ -45,7 +46,7 @@ public class DatabaseListeners implements Listener {
                     0, 0, 0, 0, 0, 0,
                     0, 0, 0, 0);
 
-            pitPlayer = new PitPlayer(event.getPlayer(), mainStats, combatStats);
+            pitPlayer = new PitPlayer(event.getPlayer(), mainStats, combatStats, new Combat(null, null));
             ThePit.database().addPlayerAsync(pitPlayer);
         }
 
